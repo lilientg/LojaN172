@@ -7,12 +7,14 @@
             <file>file:/C:/Users/181720019/Documents/NetBeansProjects/Loja_N172/src/view/TelaPrincipal.java</file>
             <file>file:/C:/Users/181720019/Documents/NetBeansProjects/Loja_N172/src/dao/CidadeDAO.java</file>
             <file>file:/C:/Users/181720019/Documents/NetBeansProjects/Loja_N172/src/view/FrmClientes.java</file>
+            <file>file:/C:/Users/181720019/Documents/NetBeansProjects/Loja_N172/src/view/FrmCategoria.java</file>
             <file>file:/C:/Users/181720019/Documents/NetBeansProjects/Loja_N172/src/dao/Conexao.java</file>
             <file>file:/C:/Users/181720019/Documents/NetBeansProjects/Loja_N172/src/dao/EstadoDAO.java</file>
             <file>file:/C:/Users/181720019/Documents/NetBeansProjects/Loja_N172/src/model/Cliente.java</file>
             <file>file:/C:/Users/181720019/Documents/NetBeansProjects/Loja_N172/src/dao/ClienteDAO.java</file>
             <file>file:/C:/Users/181720019/Documents/NetBeansProjects/Loja_N172/src/model/Cidade.java</file>
             <file>file:/C:/Users/181720019/Documents/NetBeansProjects/Loja_N172/src/view/ListCidades.java</file>
+            <file>file:/C:/Users/181720019/Documents/NetBeansProjects/Loja_N172/src/model/Estado.java</file>
         </group>
     </open-files>
 </project-private>
