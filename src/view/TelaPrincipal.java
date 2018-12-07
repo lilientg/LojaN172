@@ -107,6 +107,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         menuClienteListar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.ALT_MASK));
         menuClienteListar.setText("Listar");
+        menuClienteListar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuClienteListarActionPerformed(evt);
+            }
+        });
         jMenu4.add(menuClienteListar);
 
         jMenuBar1.add(jMenu4);
@@ -205,7 +210,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_menuProdutosCadastrarActionPerformed
 
     private void menuCategoriaListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCategoriaListarActionPerformed
-         ListCategoria tela = new ListCategoria();
+         ListCategoria tela = new ListCategoria( );
         jdpPainel.add(tela);
         tela.setVisible(true);
     }//GEN-LAST:event_menuCategoriaListarActionPerformed
@@ -215,6 +220,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jdpPainel.add(tela);
         tela.setVisible(true);
     }//GEN-LAST:event_menuProdutosListarActionPerformed
+
+    private void menuClienteListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuClienteListarActionPerformed
+         ListClientes tela = new ListClientes();
+        jdpPainel.add(tela);
+        tela.setVisible(true);
+    }//GEN-LAST:event_menuClienteListarActionPerformed
 
     /**
      * @param args the command line arguments

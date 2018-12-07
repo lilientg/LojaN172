@@ -25,10 +25,81 @@ public class FrmClientes extends javax.swing.JInternalFrame {
     /**
      * Creates new form FrmClientes
      */
+    private Cliente cliente;
+     private ListClientes telaListClientes;
+
     public FrmClientes() {
         initComponents();
         carregarEstados();
         carregarCidades(0);
+        cliente = null;
+        lblCodigo.setVisible(false);
+        lblCodigoValor.setVisible(false);
+    }
+
+    public FrmClientes(int codigo, ListClientes telaListClientes) {
+        this.telaListClientes = telaListClientes;
+        initComponents();
+        carregarEstados();
+        carregarCidades(0);
+        cliente = ClienteDAO.getClienteByCodigo(codigo);
+        carregarFormulario();
+        lblCodigo.setVisible(true);
+        lblCodigoValor.setVisible(true);
+        
+    }
+
+    private void carregarFormulario() {
+        txtNome.setText(cliente.getNome());
+        lblCodigoValor.setText(String.valueOf(cliente.getCodigo()));
+        txtCPF.setText(cliente.getCpf());
+        txtTelefone.setText(cliente.getTelefone());
+        txtSalario.setText(String.valueOf(cliente.getSalario()));
+
+        String data = "";
+
+        int dia = cliente.getNascimento().get(Calendar.DAY_OF_MONTH);
+        int mes = cliente.getNascimento().get(Calendar.MONTH) + 1;
+        int ano = cliente.getNascimento().get(Calendar.YEAR);
+        if (dia < 10) {
+            data += "0";
+        }
+        data += dia + "/";
+        if (dia < 10) {
+            data += "0";
+        }
+        data += mes + "/" + ano;
+        txtNascimento.setText(data);
+        if (cliente.getSexo().equals(cliente.FEMININO)) {
+            rbFeminino.setSelected(true);
+        }
+
+        if (cliente.getSexo().equals(cliente.MASCULINO)) {
+            rbMasculino.setSelected(true);
+        }
+
+        cbTemFilhos.setSelected(cliente.isTemfilhos());
+        cbCasados.setSelected(cliente.isCasado());
+
+        int codEstado = cliente.getEstado().getCodigo();
+
+        List<Estado> estados = EstadoDAO.getEstado();
+        for (int i = 0; i < estados.size(); i++) {
+            if (estados.get(i).getCodigo() == codEstado) {
+                int posicao = i + 1;
+                cmbEstado.setSelectedIndex(posicao);
+                break;
+            }
+        }
+        List<Cidade> cidades = CidadeDAO.getCidades(codEstado);
+        int codCidade = cliente.getCidade().getCodigo();
+        for (int i = 0; i < cidades.size(); i++) {
+            if (cidades.get(i).getCodigo() == codCidade) {
+                int posicao = i + 1;
+                cmbCidade.setSelectedIndex(posicao);
+                break;
+            }
+        }
     }
 
     private void carregarEstados() {
@@ -99,8 +170,8 @@ public class FrmClientes extends javax.swing.JInternalFrame {
         txtTelefone = new javax.swing.JFormattedTextField();
         btnSalvar = new javax.swing.JButton();
         btnLimpar = new javax.swing.JButton();
-        txtSalario = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
+        lblSalario = new javax.swing.JLabel();
+        txtSalario = new javax.swing.JFormattedTextField();
         cbCasados = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(153, 153, 153));
@@ -188,7 +259,7 @@ public class FrmClientes extends javax.swing.JInternalFrame {
 
         txtNascimento.setBackground(new java.awt.Color(240, 240, 240));
         try {
-            txtNascimento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/##")));
+            txtNascimento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -255,14 +326,19 @@ public class FrmClientes extends javax.swing.JInternalFrame {
         btnLimpar.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         btnLimpar.setText("Limpar");
         btnLimpar.setToolTipText("");
-
-        txtSalario.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        txtSalario.setText("Salário:");
-
-        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        jFormattedTextField1.addActionListener(new java.awt.event.ActionListener() {
+        btnLimpar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jFormattedTextField1ActionPerformed(evt);
+                btnLimparActionPerformed(evt);
+            }
+        });
+
+        lblSalario.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        lblSalario.setText("Salário:");
+
+        txtSalario.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        txtSalario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSalarioActionPerformed(evt);
             }
         });
 
@@ -330,9 +406,9 @@ public class FrmClientes extends javax.swing.JInternalFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtSalario)
+                                .addComponent(lblSalario)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblCidade)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -379,8 +455,8 @@ public class FrmClientes extends javax.swing.JInternalFrame {
                             .addComponent(rbMasculino))
                         .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtSalario)
-                            .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblSalario)
+                            .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(45, 45, 45)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -437,58 +513,72 @@ public class FrmClientes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_cmbCidadeActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-       String nome = txtNome.getText();
-       String cpf = txtCPF.getText();
-       Cidade cidade = (Cidade) cmbCidade.getSelectedItem();
-       boolean cpfOk = true;
+        String nome = txtNome.getText();
+        String cpf = txtCPF.getText();
+        Cidade cidade = (Cidade) cmbCidade.getSelectedItem();
+        boolean cpfOk = true;
         try {
             String ultimoNumero = cpf.substring(13);
             Integer.valueOf(ultimoNumero);
-            
+
         } catch (Exception e) {
             cpfOk = false;
         }
-       
-       if(nome.isEmpty() || !cpfOk || cidade.getCodigo() == 0){
-           JOptionPane.showMessageDialog(this, "Os campos Nome, CPF e Cidade são obrigatórios");
-    }else{ 
-        Cliente cliente = new Cliente();
-        cliente.setNome(txtNome.getText());
-        cliente.setTelefone(txtTelefone.getText());
-        cliente.setCpf(cpf);
-        
-        String salario = txtSalario.getText();
-        if(!salario.isEmpty()){
-            salario = salario.replace(",", ".");
-            cliente.setSalario(Double.valueOf(salario));
-        }else{
-            cliente.setSalario(0);
-        }
-        
-        cliente.setTemfilhos(cbTemFilhos.isSelected());
-        cliente.setCasado(cbCasados.isSelected());
-        
-        if(rbFeminino.isSelected()){
-            cliente.setSexo("f");
-        }else{
-            if(rbMasculino.isSelected()){
+
+        if (nome.isEmpty() || !cpfOk || cidade.getCodigo() == 0) {
+            JOptionPane.showMessageDialog(this, "Os campos Nome, CPF e Cidade são obrigatórios");
+        } else {
+            
+            boolean novo = false;
+            if(cidade == null){
+                cliente = new Cliente();
+                novo = true;
+            }
+            
+         //   Cliente cliente = new Cliente();
+            cliente.setNome(txtNome.getText());
+            cliente.setTelefone(txtTelefone.getText());
+            cliente.setCpf(cpf);
+
+            String salario = txtSalario.getText();
+            if (!salario.isEmpty()) {
+                salario = salario.replace(",", ".");
+                cliente.setSalario(Double.valueOf(salario));
+            } else {
+                cliente.setSalario(0);
+            }
+
+            cliente.setTemfilhos(cbTemFilhos.isSelected());
+            cliente.setCasado(cbCasados.isSelected());
+
+            if (rbFeminino.isSelected()) {
+                cliente.setSexo("f");
+            } else if (rbMasculino.isSelected()) {
                 cliente.setSexo("m");
-            }else{
+            } else {
                 cliente.setSexo("");
-          }
+            }
+
+            String data = txtNascimento.getText();
+            int dia = Integer.valueOf(data.substring(0, 2));
+            int mes = Integer.valueOf(data.substring(3, 5)) - 1;
+            int ano = Integer.valueOf(data.substring(6));
+            Calendar nascimento = Calendar.getInstance();
+            nascimento.set(ano, mes, dia);
+            cliente.setNascimento(nascimento);
+            cliente.setCidade(cidade);
+            
+            if(novo){
+              ClienteDAO.inserir(cliente);
+              limparFoemulario();
+        }else{
+              ClienteDAO.editar(cliente);
+              telaListClientes.carregarTabela();
+              this.dispose();
+              
         }
-           
-        
-        String data = txtNascimento.getText();
-        int dia = Integer.valueOf( data.substring(0 , 2));
-        int mes = Integer.valueOf( data.substring(3 , 5))-1;
-        int ano = Integer.valueOf( data.substring(6));
-           Calendar nascimento = Calendar.getInstance();
-           nascimento.set(ano,mes, dia);
-           cliente.setNascimento(nascimento);
-           cliente.setCidade(cidade);
-           
-           ClienteDAO.inserir(cliente);
+            
+            
     }//GEN-LAST:event_btnSalvarActionPerformed
     }
     private void cbCasadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCasadosActionPerformed
@@ -500,9 +590,32 @@ public class FrmClientes extends javax.swing.JInternalFrame {
         carregarCidades(estado.getCodigo());
     }//GEN-LAST:event_cmbEstadoItemStateChanged
 
-    private void jFormattedTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField1ActionPerformed
+    private void txtSalarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSalarioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jFormattedTextField1ActionPerformed
+    }//GEN-LAST:event_txtSalarioActionPerformed
+
+    private void limparFoemulario(){
+        txtNome.setText("");
+        txtTelefone.setText("");
+        txtCPF.setText("");
+        txtNascimento.setText("");
+        lblSalario.setText("");
+        buttonGroupSexo.clearSelection();
+        cbCasados.setSelected(false);
+        cbTemFilhos.setSelected(false);
+        cmbEstado.setSelectedIndex(0);
+    }
+    private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
+        txtNome.setText("");
+        txtTelefone.setText("");
+        txtCPF.setText("");
+        txtNascimento.setText("");
+        lblSalario.setText("");
+        buttonGroupSexo.clearSelection();
+        cbCasados.setSelected(false);
+        cbTemFilhos.setSelected(false);
+        cmbEstado.setSelectedIndex(0);
+    }//GEN-LAST:event_btnLimparActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -513,7 +626,6 @@ public class FrmClientes extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox cbTemFilhos;
     private javax.swing.JComboBox<String> cmbCidade;
     private javax.swing.JComboBox<String> cmbEstado;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel3;
@@ -524,12 +636,13 @@ public class FrmClientes extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblCidade;
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblCodigoValor;
+    private javax.swing.JLabel lblSalario;
     private javax.swing.JRadioButton rbFeminino;
     private javax.swing.JRadioButton rbMasculino;
     private javax.swing.JFormattedTextField txtCPF;
     private javax.swing.JFormattedTextField txtNascimento;
     private javax.swing.JTextField txtNome;
-    private javax.swing.JLabel txtSalario;
+    private javax.swing.JFormattedTextField txtSalario;
     private javax.swing.JFormattedTextField txtTelefone;
     // End of variables declaration//GEN-END:variables
 }

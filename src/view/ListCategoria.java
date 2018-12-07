@@ -5,17 +5,49 @@
  */
 package view;
 
+import dao.CategoriaDAO;
+import java.util.List;
+import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Categoria;
+
 /**
  *
  * @author 181720019
  */
 public class ListCategoria extends javax.swing.JInternalFrame {
 
+    private JDesktopPane jpdTelaInicial;
+
     /**
      * Creates new form ListCategoria
      */
-    public ListCategoria() {
+    public ListCategoria(JDesktopPane jdpPainel) {
         initComponents();
+        carregarTabela();
+        this.jpdTelaInicial = jdpPainel;
+    }
+    
+    public ListCategoria(){
+        initComponents();
+        carregarTabela();
+    }
+
+    public void carregarTabela() {
+        List<Categoria> lista = CategoriaDAO.getCategorias();
+        DefaultTableModel model = new DefaultTableModel();
+        String[] colunas = {"Código", "Categoria"};
+        model.setColumnIdentifiers(colunas);
+
+        for (Categoria cat : lista) {
+            Object[] linha = {
+                cat.getCodigo(),
+                cat.getNome()
+            };
+            model.addRow(linha);
+        }
+        tableCategoria.setModel(model);
     }
 
     /**
@@ -29,9 +61,9 @@ public class ListCategoria extends javax.swing.JInternalFrame {
 
         ListCategorias = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        tableCategoria = new javax.swing.JTable();
+        btnEditar = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(153, 153, 153));
         setClosable(true);
@@ -42,7 +74,7 @@ public class ListCategoria extends javax.swing.JInternalFrame {
         ListCategorias.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         ListCategorias.setText("Listar Categorias");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableCategoria.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -53,28 +85,39 @@ public class ListCategoria extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableCategoria);
 
-        jButton1.setText("Editar");
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Salvar");
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(189, 189, 189)
-                .addComponent(ListCategorias)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(71, 71, 71)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 206, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addGap(147, 147, 147))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(189, 189, 189)
+                        .addComponent(ListCategorias))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(98, 98, 98)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnExcluir, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE))))
+                .addContainerGap(155, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -83,25 +126,58 @@ public class ListCategoria extends javax.swing.JInternalFrame {
                 .addComponent(ListCategorias)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                        .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(178, 178, 178))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(69, 69, 69)
-                        .addComponent(jButton1)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2)))
-                .addContainerGap(108, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        int linha = tableCategoria.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(this, "Você deve selecionar uma categoria!");
+        } else {
+            int codigo = (int) tableCategoria.getValueAt(linha, 0);
+            String nome = (String) tableCategoria.getValueAt(linha, 1);
+
+            int resposta = JOptionPane.showConfirmDialog(this,
+                    "Confirma a exclusão da categoria " + nome,
+                    "Excluir Cidade", JOptionPane.YES_NO_OPTION);
+            if (resposta == JOptionPane.YES_NO_OPTION) {
+                Categoria categoria = new Categoria();
+                categoria.setCodigo(codigo);
+                CategoriaDAO.excluir(categoria);
+                carregarTabela();
+            }
+        }
+    }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        int linha = tableCategoria.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(this, "Você deve selecionar uma categoria!");
+        } else {
+            int codigo = (int) tableCategoria.getValueAt(linha, 0);
+            FrmCategoria tela = new FrmCategoria(codigo, this);
+            jpdTelaInicial.add(tela);
+            tela.setVisible(true);
+        }
+
+    }//GEN-LAST:event_btnEditarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ListCategorias;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tableCategoria;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,6 +5,11 @@ import java.util.Calendar;
 
 
 public class Cliente {
+    
+    public static final String FEMININO = "f";
+    public static final String MASCULINO = "m";
+    
+    
     private int codigo;
     private String nome, cpf, sexo, telefone;
     private Calendar nascimento;
@@ -31,7 +36,15 @@ public class Cliente {
 
     public Cliente() {
     }
-
+    
+    public Cliente(String nome){
+        this.nome = nome;
+    }
+    
+    public Cliente(int codigo){
+        this.codigo = codigo;
+    }
+    
     public Cliente(int codigo, String nome, String cpf, String sexo, String telefone, Calendar nascimento, boolean temfilhos, Cidade cidade, Estado estado) {
         this.codigo = codigo;
         this.nome = nome;

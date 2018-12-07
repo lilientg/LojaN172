@@ -5,17 +5,80 @@
  */
 package view;
 
+import dao.ClienteDAO;
+import java.util.Calendar;
+import java.util.List;
+import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Cliente;
+
 /**
  *
  * @author 181720019
  */
 public class ListClientes extends javax.swing.JInternalFrame {
+    
+    private JDesktopPane jdpTelaInicial;
+    
+    public ListClientes(JDesktopPane jdpTelaInicial) {
+        initComponents();
+        carregarTabela();
+        this.jdpTelaInicial = jdpTelaInicial;
+    }
+
 
     /**
      * Creates new form ListClientes
      */
     public ListClientes() {
         initComponents();
+        carregarTabela();
+    }
+
+    public void carregarTabela() {
+        List<Cliente> lista = ClienteDAO.getClientes();
+        String[] colunas = {"Código", "Nome", "Telefone", "CPF",
+            "Data de Nascimento", "Sexo", "Casado?", "Filhos?",
+            "Salário", "Cidade", "Estado"};
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(colunas);
+
+        for (Cliente cliente : lista) {
+            Calendar nasc = cliente.getNascimento();
+
+            String data = ""
+                    + nasc.get(Calendar.DAY_OF_WEEK)
+                    + "/" + (nasc.get(Calendar.MONTH) + 1)
+                    + "/" + nasc.get(Calendar.YEAR);
+
+            String casado = "Não";
+            if (cliente.isCasado()) {
+                casado = "Sim";
+            }
+            String filhos = "Não";
+            if (cliente.isTemfilhos()) {
+                filhos = "Sim";
+            }
+            String sexo = "";
+            if (cliente.getSexo().equals("f")) {
+                sexo = "Feminino";
+            }
+            if (cliente.getSexo().equals("m")) {
+                sexo = "Masculino";
+            }
+
+            Object[] dados = {
+                cliente.getCodigo(),
+                cliente.getNome(),
+                cliente.getTelefone(),
+                cliente.getCpf(), data,
+                sexo, casado, filhos, cliente.getSalario(),
+                cliente.getCidade().getNome(),};
+            model.addRow(dados);
+        }
+        tableClientes.setModel(model);
+
     }
 
     /**
@@ -29,9 +92,9 @@ public class ListClientes extends javax.swing.JInternalFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        tableClientes = new javax.swing.JTable();
+        jbnEditar = new javax.swing.JButton();
+        jbnExcluir = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(153, 153, 153));
         setClosable(true);
@@ -42,8 +105,8 @@ public class ListClientes extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel1.setText("Lista de Clientes");
 
-        jTable1.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableClientes.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        tableClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null},
@@ -61,16 +124,21 @@ public class ListClientes extends javax.swing.JInternalFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableClientes);
 
-        jButton1.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jButton1.setText("Editar");
-
-        jButton2.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jButton2.setText("Excluir");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jbnEditar.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jbnEditar.setText("Editar");
+        jbnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jbnEditarActionPerformed(evt);
+            }
+        });
+
+        jbnExcluir.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jbnExcluir.setText("Excluir");
+        jbnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbnExcluirActionPerformed(evt);
             }
         });
 
@@ -79,48 +147,75 @@ public class ListClientes extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(103, 103, 103)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(86, 86, 86))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 598, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jbnExcluir)
+                            .addComponent(jbnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(299, 299, 299)
+                        .addComponent(jLabel1)))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(136, 136, 136)
+                .addComponent(jbnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(47, 47, 47)
+                .addComponent(jbnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(283, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(27, 27, 27)
                 .addComponent(jLabel1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(101, 101, 101)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void jbnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbnExcluirActionPerformed
+        int linha = tableClientes.getSelectedRow();
+        if(linha < 0){
+            JOptionPane.showMessageDialog(this,"Um cliente deve ser selecionado!");
+        }else{
+            int codigo = (int) tableClientes.getValueAt(linha,0);
+            Cliente cliente = ClienteDAO.getClienteByCodigo(codigo);
+            
+            int resposta = JOptionPane.showConfirmDialog
+              (this,
+                      "Confirma a exclusão do cliente  "+cliente.getNome()+
+                              "?", "Excluir Cliente",
+                              JOptionPane.YES_NO_OPTION);
+            if(resposta == JOptionPane.YES_OPTION){       
+            ClienteDAO.excluir(cliente);
+            carregarTabela();
+        }
+        }
+    }//GEN-LAST:event_jbnExcluirActionPerformed
 
-
+    private void jbnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbnEditarActionPerformed
+        int linha = tableClientes.getSelectedRow();
+        if(linha < 0){
+            JOptionPane.showMessageDialog(this,"Um cliente deve ser selecionado!");
+        }else{
+            int codigo = (int) tableClientes.getValueAt(linha,0);
+            FrmClientes tela = new FrmClientes(codigo, this);
+            this.jdpTelaInicial.add(tela);
+            tela.setVisible(true);
+    }//GEN-LAST:event_jbnEditarActionPerformed
+    
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JButton jbnEditar;
+    private javax.swing.JButton jbnExcluir;
+    private javax.swing.JTable tableClientes;
     // End of variables declaration//GEN-END:variables
 }

@@ -24,16 +24,18 @@ public class FrmCidade extends javax.swing.JInternalFrame {
      * Creates new form FrmCidade
      */
     private Cidade cidade;
+    private ListCidades telaListCidades;
     
     public FrmCidade() {
-        initComponents();
-        lblCodigo.setVisible(false);
+        initComponents();lblCodigo.setVisible(false);
         lblCodigoValor.setVisible(false);
         carregarEstados();
         cidade = null;
+        
     }
     
-    public FrmCidade(int codigo) {
+    public FrmCidade(int codigo, ListCidades telaListCidades) {
+        this.telaListCidades = telaListCidades;
         initComponents();
         lblCodigo.setVisible(true);
         lblCodigoValor.setVisible(true);
@@ -103,6 +105,12 @@ public class FrmCidade extends javax.swing.JInternalFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Nome: ");
+
+        txtNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNomeActionPerformed(evt);
+            }
+        });
 
         btnSalvar.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         btnSalvar.setText("Salvar");
@@ -202,6 +210,8 @@ public class FrmCidade extends javax.swing.JInternalFrame {
             CidadeDAO.inserir(cidade);
             }else{
                 CidadeDAO.editar(cidade);
+                telaListCidades.carregarTabela();
+                this.dispose();
             }
             txtNome.setText("");
             cmbEstado.setSelectedIndex( 0 );
@@ -212,6 +222,10 @@ public class FrmCidade extends javax.swing.JInternalFrame {
     private void cmbEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEstadoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbEstadoActionPerformed
+
+    private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNomeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
