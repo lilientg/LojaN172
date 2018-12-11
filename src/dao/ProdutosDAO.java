@@ -19,35 +19,32 @@ import model.Produtos;
 public class ProdutosDAO {
     public static void inserir(Produtos produtos) {
         String sql = "INSERT INTO categorias "
-                + "(nome, codigo, preco, quantidade, codCategoria)"
+                + "(nome, preco, quantidade, codCategoria)"
                 + " VALUES('" + produtos.getNome() + "' , "
-                + "  " + produtos.getCodigo() + " , "
                 + " " + produtos.getPreco() + " , "
-                + " " + produtos.getQuantidade() + " "
+                + " " + produtos.getQuantidade() + " , "
                 + " " + produtos.getCategoria().getCodigo()
                 + " ) ";
                 
         boolean retorno = Conexao.executar(sql);
         if (!retorno) {
             JOptionPane.showMessageDialog(null,
-                    "Erro ao inserir a categoria");
+                    "Erro ao inserir o produto");
         }
     }
   
     public static void editar(Produtos produtos) {
-        String sql = "INSERT INTO categorias "
-                + "(nome, codigo, preco, quantidade, codCategoria)"
-                + " VALUES('" + produtos.getNome() + "' , "
-                + "  " + produtos.getCodigo() + " , "
-                + " " + produtos.getPreco() + " , "
-                + " " + produtos.getQuantidade() + " "
-                + " " + produtos.getCategoria().getCodigo()
-                + " ) ";
+        String sql = "UPDATE  produtos  SET "
+                + " nome = '" + produtos.getNome() + "' , "
+                + " preco = " + produtos.getPreco() + " , "
+                + " quantidade = " + produtos.getQuantidade() + " "
+                + " codCategoria = " + produtos.getCategoria().getCodigo()
+                + "  WHERE codigo = " + produtos.getCodigo(); 
                 
         boolean retorno = Conexao.executar(sql);
         if (!retorno) {
             JOptionPane.showMessageDialog(null,
-                    "Erro ao inserir a categoria");
+                    "Erro ao inserir o produto");
         }
     }
     

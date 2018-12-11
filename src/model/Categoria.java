@@ -10,6 +10,8 @@ package model;
  * @author 181720019
  */
 public class Categoria {
+    
+    
     private int codigo;
     private String nome;
 
@@ -20,6 +22,13 @@ public class Categoria {
         this.codigo = codigo;
         this.nome = nome;
     }
+
+    @Override
+    public String toString() {
+        return nome; //To change body of generated methods, choose Tools | Templates.
+    }
+    
+   
     
     public int getCodigo() {
         return codigo;

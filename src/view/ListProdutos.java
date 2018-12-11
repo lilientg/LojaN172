@@ -5,18 +5,46 @@
  */
 package view;
 
+import dao.CategoriaDAO;
+import java.util.List;
+import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Categoria;
+import model.Produtos;
+
 /**
  *
  * @author 181720019
  */
 public class ListProdutos extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form ListProdutos
-     */
-    public ListProdutos() {
+    private JDesktopPane jpdTelaInicial;
+    
+    
+    public ListProdutos(JDesktopPane jdpPainel) {
         initComponents();
+        carregarTabela();
+        this.jpdTelaInicial = jdpPainel;
     }
+    
+    public void carregarTabela() {
+        List<Categoria> lista = CategoriaDAO.getCategorias();
+        DefaultTableModel model = new DefaultTableModel();
+        String[] colunas = {"Código da Categoria", "Categoria", "Código do produto", "Produto"};
+        model.setColumnIdentifiers(colunas);
+
+        for (Categoria cat : lista) {
+            Object[] linha = {
+                cat.getCodigo(),
+                cat.getNome()
+            };
+            model.addRow(linha);
+        }
+      
+        tableProdutos.setModel(model);
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -28,11 +56,10 @@ public class ListProdutos extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         FrmCategorias = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        txtNome = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        cmbCategorias = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        txtEditar = new javax.swing.JButton();
+        txtExcluir = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableProdutos = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(153, 153, 153));
         setClosable(true);
@@ -44,31 +71,32 @@ public class ListProdutos extends javax.swing.JInternalFrame {
         FrmCategorias.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         FrmCategorias.setText("Lista de produtos");
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Nome: ");
-
-        txtNome.addActionListener(new java.awt.event.ActionListener() {
+        txtEditar.setText("Editar");
+        txtEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNomeActionPerformed(evt);
+                txtEditarActionPerformed(evt);
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel2.setText("Categorias:");
-
-        cmbCategorias.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cmbCategorias.addActionListener(new java.awt.event.ActionListener() {
+        txtExcluir.setText("Excluir");
+        txtExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbCategoriasActionPerformed(evt);
+                txtExcluirActionPerformed(evt);
             }
         });
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        tableProdutos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        });
+        ));
+        jScrollPane1.setViewportView(tableProdutos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -80,59 +108,58 @@ public class ListProdutos extends javax.swing.JInternalFrame {
                         .addGap(179, 179, 179)
                         .addComponent(FrmCategorias))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(64, 64, 64)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbCategorias, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(167, 167, 167)
-                        .addComponent(jButton1)))
-                .addContainerGap(118, Short.MAX_VALUE))
+                            .addComponent(txtExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(63, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(FrmCategorias)
-                .addGap(54, 54, 54)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(cmbCategorias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(118, 118, 118)
-                .addComponent(jButton1)
-                .addContainerGap(135, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(FrmCategorias)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(195, 195, 195)
+                        .addComponent(txtEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48)
+                        .addComponent(txtExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(32, 32, 32))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNomeActionPerformed
+    private void txtEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEditarActionPerformed
+             int linha = tableProdutos.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(this, "Você deve selecionar uma categoria!");
+        } else {
+            int codigo = (int) tableProdutos.getValueAt(linha, 0);
+            FrmProdutos tela = new FrmProdutos(codigo, this);
+            jpdTelaInicial.add(tela);
+            tela.setVisible(true);
+        }
 
-    private void cmbCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoriasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbCategoriasActionPerformed
+    }//GEN-LAST:event_txtEditarActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void txtExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtExcluirActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_txtExcluirActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel FrmCategorias;
-    private javax.swing.JComboBox<String> cmbCategorias;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField txtNome;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tableProdutos;
+    private javax.swing.JButton txtEditar;
+    private javax.swing.JButton txtExcluir;
     // End of variables declaration//GEN-END:variables
 }

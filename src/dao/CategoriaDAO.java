@@ -18,9 +18,8 @@ import model.Categoria;
 public class CategoriaDAO {
     
     public static void inserir(Categoria categoria) {
-        String sql = "INSERT INTO categorias (nome, codigo)"
-                + " VALUES('" + categoria.getNome() + "' , "
-                + "  " + categoria.getCodigo() + " )";
+        String sql = "INSERT INTO categorias (nome)"
+                + " VALUES('" + categoria.getNome() + "' )";
         boolean retorno = Conexao.executar(sql);
         if (!retorno) {
             JOptionPane.showMessageDialog(null,

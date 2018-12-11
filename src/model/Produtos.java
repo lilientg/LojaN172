@@ -19,7 +19,7 @@ public class Produtos {
     public Produtos(){
     }
     
-    public Produtos(double preco, int codigo, String nome, int quantidade ){
+    public Produtos(double preco, int codigo, String nome, double quantidade ){
         this.codigo = codigo;
         this.nome = nome;
         this.preco = preco;

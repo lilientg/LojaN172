@@ -29,10 +29,12 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
     public FrmProdutos() {
         initComponents();
         produtos= null;
+        carregarCategorias();
     }
     
     public FrmProdutos(int codigo, ListProdutos telaListProdutos){
         initComponents();
+        carregarCategorias();
         this.telaListProdutos = telaListProdutos;
         produtos = ProdutosDAO.getProdutosByCodigo(codigo);
         carregarFormulario();
@@ -60,11 +62,10 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
         List<Categoria> lista = CategoriaDAO.getCategorias();
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         
-        Categoria fake = new Categoria("Selecione...");
-        fake.setCodigo(0);
+        Categoria fake = new Categoria(0, "Selecione...");
         model.addElement(fake);
-        for( Produtos produtos : lista ){
-            model.addElement( produtos);
+        for( Categoria categoria : lista ){
+            model.addElement( categoria);
         }
         cmbCategoria.setModel(model);
         
@@ -87,12 +88,12 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
         lblNome = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        txtPreco = new javax.swing.JTextField();
         txtNome = new javax.swing.JTextField();
         txtQuantidade = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         cmbCategoria = new javax.swing.JComboBox<>();
         lblCodigo = new javax.swing.JLabel();
+        txtPreco = new javax.swing.JFormattedTextField();
 
         jLabel2.setText("jLabel2");
 
@@ -133,12 +134,6 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
         jLabel4.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel4.setText("Quantidade: ");
 
-        txtPreco.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPrecoActionPerformed(evt);
-            }
-        });
-
         txtQuantidade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtQuantidadeActionPerformed(evt);
@@ -156,6 +151,13 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
         });
 
         lblCodigo.setText("0");
+
+        txtPreco.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        txtPreco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPrecoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -182,19 +184,19 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(cmbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(layout.createSequentialGroup()
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                     .addComponent(jLabel3)
-                                    .addGap(18, 18, 18)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(txtPreco))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                     .addComponent(lblNome)
                                     .addGap(18, 18, 18)
-                                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(176, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -212,8 +214,8 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
                     .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(txtPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -226,23 +228,25 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar)
                     .addComponent(btnLimpar))
-                .addContainerGap(117, Short.MAX_VALUE))
+                .addContainerGap(121, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtPrecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPrecoActionPerformed
-
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        // TODO add your handling code here:
+        limparFormulario();
     }//GEN-LAST:event_btnLimparActionPerformed
-
+ private void limparFormulario(){
+     txtNome.setText("");
+        txtPreco.setText("");
+        txtQuantidade.setText("");
+        cmbCategoria.setSelectedIndex(0);
+ }
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
        String nome = txtNome.getText();
        String preco = txtPreco.getText();
+       String qtd = txtQuantidade.getText();
        Categoria categoria = (Categoria) cmbCategoria.getSelectedItem();
        
        if(nome.isEmpty() || preco.isEmpty() || categoria.getCodigo() == 0 ){
@@ -256,7 +260,22 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
            }
            
           produtos.setNome(txtNome.getText());
-          produtos.setPreco( Double.valueOf( txtPreco.getText() ));
+          preco = preco.replace(",", ".");
+          produtos.setPreco( Double.valueOf( preco ));
+          
+          if(qtd.isEmpty()){
+              produtos.setQuantidade(0);
+          }else{
+              qtd = qtd.replace(",", ".");
+              produtos.setQuantidade( Double.valueOf(qtd));
+          }
+          
+          produtos.setCategoria(categoria);
+          
+           ProdutosDAO.inserir(produtos);
+           limparFormulario();
+           
+          
           
        }
        
@@ -269,6 +288,10 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
     private void txtQuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQuantidadeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtQuantidadeActionPerformed
+
+    private void txtPrecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPrecoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -284,7 +307,7 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblNome;
     private javax.swing.JTextField txtNome;
-    private javax.swing.JTextField txtPreco;
+    private javax.swing.JFormattedTextField txtPreco;
     private javax.swing.JTextField txtQuantidade;
     // End of variables declaration//GEN-END:variables
 }
