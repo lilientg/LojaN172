@@ -19,12 +19,12 @@ import model.Cliente;
  */
 public class ListClientes extends javax.swing.JInternalFrame {
     
-    private JDesktopPane jdpTelaInicial;
+    public JDesktopPane jdpTelaInicial;
     
-    public ListClientes(JDesktopPane jdpTelaInicial) {
+    public ListClientes(JDesktopPane jdpPainel) {
         initComponents();
         carregarTabela();
-        this.jdpTelaInicial = jdpTelaInicial;
+        this.jdpTelaInicial = jdpPainel;
     }
 
 
@@ -206,7 +206,7 @@ public class ListClientes extends javax.swing.JInternalFrame {
         }else{
             int codigo = (int) tableClientes.getValueAt(linha,0);
             FrmClientes tela = new FrmClientes(codigo, this);
-            this.jdpTelaInicial.add(tela);
+            jdpTelaInicial.add(tela);
             tela.setVisible(true);
     }//GEN-LAST:event_jbnEditarActionPerformed
     

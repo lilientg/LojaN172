@@ -81,7 +81,7 @@ public class FrmClientes extends javax.swing.JInternalFrame {
         cbTemFilhos.setSelected(cliente.isTemfilhos());
         cbCasados.setSelected(cliente.isCasado());
 
-        int codEstado = cliente.getEstado().getCodigo();
+        int codEstado = cliente.getCidade().getEstado().getCodigo();
 
         List<Estado> estados = EstadoDAO.getEstado();
         for (int i = 0; i < estados.size(); i++) {
@@ -530,13 +530,13 @@ public class FrmClientes extends javax.swing.JInternalFrame {
         } else {
             
             boolean novo = false;
-            if(cidade == null){
+            if(cliente == null){
                 cliente = new Cliente();
                 novo = true;
             }
             
-         //   Cliente cliente = new Cliente();
-            cliente.setNome(txtNome.getText());
+          
+            cliente.setNome( txtNome.getText() );
             cliente.setTelefone(txtTelefone.getText());
             cliente.setCpf(cpf);
 
