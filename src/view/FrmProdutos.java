@@ -30,6 +30,8 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
         initComponents();
         produtos= null;
         carregarCategorias();
+        lblCodigoValor.setVisible(false);
+        lblCodigo.setVisible(false);
     }
     
     public FrmProdutos(int codigo, ListProdutos telaListProdutos){
@@ -38,6 +40,8 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
         this.telaListProdutos = telaListProdutos;
         produtos = ProdutosDAO.getProdutosByCodigo(codigo);
         carregarFormulario();
+        lblCodigoValor.setVisible(true);
+        lblCodigo.setVisible(true);
     }
     
     public void carregarFormulario(){
@@ -47,9 +51,9 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
         
         int codCategoria = produtos.getCategoria().getCodigo();
         
-        List<Produtos> produtos = ProdutosDAO.getProdutos();
-        for (int i =0; i< produtos.size(); i++){
-            if(produtos.get(i).getCodigo() == codCategoria){
+        List<Categoria> categorias  = CategoriaDAO.getCategorias();
+        for (int i =0; i< categorias.size(); i++){
+            if(categorias.get(i).getCodigo() == codCategoria){
                 int posicao = i + 1;
                 cmbCategoria.setSelectedIndex(posicao);
                 break;
@@ -84,7 +88,6 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
         FrmProdutos = new javax.swing.JLabel();
         btnLimpar = new javax.swing.JButton();
         btnSalvar = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         lblNome = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -92,8 +95,9 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
         txtQuantidade = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         cmbCategoria = new javax.swing.JComboBox<>();
-        lblCodigo = new javax.swing.JLabel();
         txtPreco = new javax.swing.JFormattedTextField();
+        lblCodigo = new javax.swing.JLabel();
+        lblCodigoValor = new javax.swing.JLabel();
 
         jLabel2.setText("jLabel2");
 
@@ -122,9 +126,6 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jLabel1.setText("Código:");
-
         lblNome.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         lblNome.setText("Nome:");
 
@@ -150,14 +151,18 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
             }
         });
 
-        lblCodigo.setText("0");
-
         txtPreco.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         txtPreco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPrecoActionPerformed(evt);
             }
         });
+
+        lblCodigo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblCodigo.setText("Código:");
+
+        lblCodigoValor.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblCodigoValor.setText("0");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -184,11 +189,11 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(cmbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(lblCodigo)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(lblCodigoValor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                     .addComponent(jLabel3)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -204,11 +209,11 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(FrmProdutos)
-                .addGap(32, 32, 32)
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(lblCodigo))
-                .addGap(18, 18, 18)
+                    .addComponent(lblCodigo)
+                    .addComponent(lblCodigoValor))
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNome)
                     .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -228,7 +233,7 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar)
                     .addComponent(btnLimpar))
-                .addContainerGap(121, Short.MAX_VALUE))
+                .addContainerGap(117, Short.MAX_VALUE))
         );
 
         pack();
@@ -271,14 +276,16 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
           }
           
           produtos.setCategoria(categoria);
-          
+          if(novo){
            ProdutosDAO.inserir(produtos);
-           limparFormulario();
-           
-          
+           limparFormulario();          
+          }else{
+              ProdutosDAO.editar(produtos);
+              telaListProdutos.carregarTabela();
+              this.dispose();
+          }
           
        }
-       
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void cmbCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoriaActionPerformed
@@ -299,12 +306,12 @@ public class FrmProdutos extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnLimpar;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox<String> cmbCategoria;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel lblCodigo;
+    private javax.swing.JLabel lblCodigoValor;
     private javax.swing.JLabel lblNome;
     private javax.swing.JTextField txtNome;
     private javax.swing.JFormattedTextField txtPreco;

@@ -599,7 +599,7 @@ public class FrmClientes extends javax.swing.JInternalFrame {
         txtTelefone.setText("");
         txtCPF.setText("");
         txtNascimento.setText("");
-        lblSalario.setText("");
+        txtSalario.setText("");
         buttonGroupSexo.clearSelection();
         cbCasados.setSelected(false);
         cbTemFilhos.setSelected(false);
@@ -610,7 +610,7 @@ public class FrmClientes extends javax.swing.JInternalFrame {
         txtTelefone.setText("");
         txtCPF.setText("");
         txtNascimento.setText("");
-        lblSalario.setText("");
+        txtSalario.setText("");
         buttonGroupSexo.clearSelection();
         cbCasados.setSelected(false);
         cbTemFilhos.setSelected(false);

@@ -6,6 +6,7 @@
 package view;
 
 import dao.CategoriaDAO;
+import dao.ProdutosDAO;
 import java.util.List;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
@@ -29,15 +30,19 @@ public class ListProdutos extends javax.swing.JInternalFrame {
     }
     
     public void carregarTabela() {
-        List<Categoria> lista = CategoriaDAO.getCategorias();
+        List<Produtos> lista = ProdutosDAO.getProdutos();
+        List<Categoria> lista2 = CategoriaDAO.getCategorias();
         DefaultTableModel model = new DefaultTableModel();
-        String[] colunas = {"Código da Categoria", "Categoria", "Código do produto", "Produto"};
+        String[] colunas = {"Código do produto", "Produto","Preço", "Quantidadee", "Categoria"};
         model.setColumnIdentifiers(colunas);
 
-        for (Categoria cat : lista) {
+        for (Produtos pro : lista) {
             Object[] linha = {
-                cat.getCodigo(),
-                cat.getNome()
+                pro.getCodigo(),
+                pro.getNome(),
+                pro.getPreco(),
+                pro.getQuantidade(),
+                pro.getCategoria().getNome()
             };
             model.addRow(linha);
         }
@@ -140,7 +145,7 @@ public class ListProdutos extends javax.swing.JInternalFrame {
     private void txtEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEditarActionPerformed
              int linha = tableProdutos.getSelectedRow();
         if (linha < 0) {
-            JOptionPane.showMessageDialog(this, "Você deve selecionar uma categoria!");
+            JOptionPane.showMessageDialog(this, "Você deve selecionar um produto!");
         } else {
             int codigo = (int) tableProdutos.getValueAt(linha, 0);
             FrmProdutos tela = new FrmProdutos(codigo, this);
@@ -151,7 +156,24 @@ public class ListProdutos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtEditarActionPerformed
 
     private void txtExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtExcluirActionPerformed
-        // TODO add your handling code here:
+         int linha = tableProdutos.getSelectedRow();
+        if(linha<0){
+            JOptionPane.showMessageDialog(this,"Você deve selecionar um produto!");
+        }else{
+            int codigo = (int)tableProdutos.getValueAt(linha,0);
+            String nome = (String)tableProdutos.getValueAt(linha,1);
+            
+            int resposta = JOptionPane.showConfirmDialog(this,
+                    "Confirma a exclusão do produto"+ nome,
+                    "Excluir Produto", JOptionPane.YES_NO_OPTION);
+            if(resposta == JOptionPane.YES_NO_OPTION){
+                Produtos produto = new Produtos();
+           produto.setCodigo(codigo);
+            ProdutosDAO.excluir(produto);
+            carregarTabela();
+        }
+       
+        }
     }//GEN-LAST:event_txtExcluirActionPerformed
 
 
